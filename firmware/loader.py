@@ -4,7 +4,7 @@ from scrapy.loader.processors import Identity, MapCompose, TakeFirst
 import datetime
 import re
 import string
-import urlparse
+import urllib
 
 
 class FirmwareLoader(ItemLoader):
@@ -45,11 +45,11 @@ class FirmwareLoader(ItemLoader):
         return None
 
     def clean(s):
-        return filter(lambda x: x in string.printable, s).replace("\r", "").replace("\n", "").replace(u"\xa0", " ").strip()
+        return "".join(filter(lambda x: x in string.printable, s)).replace("\r", "").replace("\n", "").replace(u"\xa0", " ").strip()
 
     def fix_url(url, loader_context):
-        if not urlparse.urlparse(url).netloc:
-            return urlparse.urljoin(loader_context.get("response").url, url)
+        if not urllib.parse.urlparse(url).netloc:
+            return urllib.parse.urljoin(loader_context.get("response").url, url)
         return url
 
     def parse_date(date, loader_context):
