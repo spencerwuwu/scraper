@@ -6,6 +6,7 @@ from firmware.loader import FirmwareLoader
 
 import json
 import urllib
+import os
 
 
 class DLinkSpider(Spider):
@@ -16,6 +17,12 @@ class DLinkSpider(Spider):
     custom_settings = {"CONCURRENT_REQUESTS": 3}
 
     def start_requests(self):
+        file_path = "./output/package.json"
+        try: 
+            fp = open(file_path, "r+")
+        except IOError:
+            fp = open(file_path, "w+")
+
         for url in self.start_urls:
             yield Request(url, cookies={'ServiceTypecookies': "ServiceType=2&ServiceTypeshow=1"}, dont_filter=True)
 

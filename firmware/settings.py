@@ -5,9 +5,11 @@ NEWSPIDER_MODULE = "scraper.spiders"
 
 ITEM_PIPELINES = {
     "firmware.pipelines.FirmwarePipeline" : 1,
+    "firmware.pipelines.JsonWritePipeline" : 2,
 }
 
 FILES_STORE = "./output/"
+FILES_JSON = "./output/package.json"
 
 AUTOTHROTTLE_ENABLED = True
 AUTOTHROTTLE_START_DELAY = 0
@@ -21,4 +23,3 @@ DOWNLOAD_WARNSIZE = 0
 ROBOTSTXT_OBEY = False
 USER_AGENT = "FirmwareBot/1.0 (+https://github.com/firmadyne/scraper)"
 
-#SQL_SERVER = "127.0.0.1"

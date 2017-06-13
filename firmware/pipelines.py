@@ -7,6 +7,7 @@ import hashlib
 import logging
 import urllib
 import urllib
+import json
 
 logger = logging.getLogger(__name__)
 
@@ -16,11 +17,12 @@ class FirmwarePipeline(FilesPipeline):
     @classmethod
     def from_settings(cls, settings):
         store_uri = settings['FILES_STORE']
+        store_json = settings['FILES_JSON']
         cls.expires = settings.getint('FILES_EXPIRES')
         cls.files_urls_field = settings.get('FILES_URLS_FIELD')
         cls.files_result_field = settings.get('FILES_RESULT_FIELD')
 
-        return cls(store_uri, settings=settings)
+        return cls(store_uri, store_json, settings=settings)
 
     # overrides function from FilesPipeline
     def file_path(self, request, response=None, info=None):
@@ -71,4 +73,21 @@ class FirmwarePipeline(FilesPipeline):
             item[self.files_result_field] = [x for ok, x in results if ok]
 
         print("file_url:", item['file_urls'])
+        
+        return item
+
+class JsonWritePipeline(FilesPipeline):
+    def __init__(self, store_json, settings=None):
+        self.file = open(store_json, "a+")
+        super(JsonWritePipeline, self).__init__(store_json, settings)
+
+    @classmethod
+    def from_settings(cls, settings):
+        store_json = settings['FILES_JSON']
+
+        return cls(store_json, settings=settings)
+
+    def process_item(self, item, spider):
+        line = json.dumps(item) + "\n"
+        self.file,write(line)
         return item
