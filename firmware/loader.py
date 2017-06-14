@@ -33,17 +33,6 @@ class FirmwareLoader(ItemLoader):
                           " ".join(text).replace(u"\xa0", " ").strip())
         return next((x for x in match.groups() if x and "192.168." not in x.lower()), None) if match else None
 
-    def find_date(self, text):
-        for fmt in self.context.get("date_fmt", []):
-            fmt = "(" + re.escape(fmt).replace("\%b", "[a-zA-Z]{3}").replace("\%B", "[a-zA-Z]+").replace(
-                "\%m", "\d{1,2}").replace("\%d", "\d{1,2}").replace("\%y", "\d{2}").replace("\%Y", "\d{4}") + ")"
-            match = re.search(fmt, "".join(text).strip())
-            res = filter(lambda x: x, match.groups()) if match else None
-
-            if res:
-                return res[0]
-        return None
-
     def clean(s):
         return "".join(filter(lambda x: x in string.printable, s)).replace("\r", "").replace("\n", "").replace(u"\xa0", " ").strip()
 
@@ -51,14 +40,6 @@ class FirmwareLoader(ItemLoader):
         if not urllib.parse.urlparse(url).netloc:
             return urllib.parse.urljoin(loader_context.get("response").url, url)
         return url
-
-    def parse_date(date, loader_context):
-        for fmt in loader_context.get("date_fmt", []):
-            try:
-                return datetime.datetime.strptime(date, fmt)
-            except ValueError:
-                pass
-        return None
 
     def remove_html(s):
         return re.sub(r"<[a-zA-Z0-9\"/=: ]+>", "", s)
@@ -71,7 +52,6 @@ class FirmwareLoader(ItemLoader):
     description_in = MapCompose(remove_html, clean)
     version_in = MapCompose(clean)
     build_in = MapCompose(clean)
-    date_in = MapCompose(clean, parse_date)
 
     mib_in = MapCompose(fix_url)
     sdk_in = MapCompose(fix_url)

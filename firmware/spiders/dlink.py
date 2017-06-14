@@ -19,9 +19,11 @@ class DLinkSpider(Spider):
     def start_requests(self):
         file_path = "./output/package.json"
         try: 
-            fp = open(file_path, "r+")
+            fp = open(file_path, "w+")
         except IOError:
             fp = open(file_path, "w+")
+
+        fp.write("")
 
         for url in self.start_urls:
             yield Request(url, cookies={'ServiceTypecookies': "ServiceType=2&ServiceTypeshow=1"}, dont_filter=True)
@@ -59,11 +61,9 @@ class DLinkSpider(Spider):
                 if file["filetypename"].lower() == "firmware" or file[
                         "isFirmF"] == "1":
                     item = FirmwareLoader(item=FirmwareImage(),
-                                          response=response,
-                                          date_fmt=["%m/%d/%y"])
+                                          response=response)
                     item.add_value("version",
                                    FirmwareLoader.find_version_period([file["name"]]))
-                    item.add_value("date", file["date"])
                     item.add_value("description", file["name"])
                     item.add_value("url", file["url"])
                     item.add_value("build", response.meta["revision"])

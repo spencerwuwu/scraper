@@ -88,6 +88,7 @@ class JsonWritePipeline(FilesPipeline):
         return cls(store_json, settings=settings)
 
     def process_item(self, item, spider):
-        line = json.dumps(item) + "\n"
-        self.file,write(line)
+        print("Save to package.json")
+        line = json.dumps(dict(item)) + "\n"
+        self.file.write(line)
         return item

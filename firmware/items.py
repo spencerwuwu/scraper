@@ -7,7 +7,6 @@ class FirmwareImage(Item):
     description = Field(default=None)
     version = Field(default=None)
     build = Field(default=None)
-    date = Field(default=None)
 
     mib = Field(default=None)
     sdk = Field(default=None)
