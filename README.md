@@ -12,13 +12,12 @@ Dependencies
 Usage
 =====
 
-1. Configure the `firmware/settings.py` file. Comment out `SQL_SERVER` if metadata about
-downloaded firmware should not be inserted into a SQL server.
-
-2. To run a specific scraper, e.g. `dlink`:
+* To run a specific scraper, e.g. `dlink`:
 
 `scrapy crawl dlink`
 
-To run all scrapers with maximum 4 in parallel, using [GNU Parallel](https://www.gnu.org/software/parallel/):
+* The result will be saved to `output/package.json
+
+* To run all scrapers with maximum 4 in parallel, using [GNU Parallel](https://www.gnu.org/software/parallel/):
 
 ```parallel -j 4 scrapy crawl ::: `for i in ./firmware/spiders/*.py; do basename ${i%.*}; done` ```
